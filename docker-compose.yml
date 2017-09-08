@@ -1,0 +1,49 @@
+version: '3'
+services:
+    nginx:
+        image: nginx:1.10.3
+        container_name: oryxtc-nginx
+        restart: always
+        ports:
+        - 80:80
+        - 443:443
+        links:
+        - php:php_server
+        volumes:
+        - ./nginx:/etc/nginx/conf.d  #nginx配置文件目录
+        - oryxtc-volume:/home/www
+    php7:
+        build:
+            context: ./php7
+        image: oryxtc/oryxtc-php7
+        container_name: oryxtc-php7
+        restart: always
+        links:
+        - mysql:mysql_server
+        - redis:redis_server
+        volumes:
+        - oryxtc-volume:/home/www
+    mysql:
+        image: mysql:5.7
+        container_name: oryxtc-mysql
+        restart: always
+        ports:
+        - 3306:3306
+        environment:
+        - MYSQL_USER=oryxtc
+        - MYSQL_PASSWORD=123456
+        - MYSQL_ROOT_PASSWORD=needtofile
+    redis:
+        build:
+            context: ./redis
+        image: oryxtc/oryxtc-redis
+        container_name: oryxtc-redis
+        restart: always
+        ports:
+        - 6379:6379
+volumes:
+  - type: volume
+    source: oryxtc-volume
+    target: /home/www    #项目总目录
+    volume:
+      nocopy: false      #在容器的挂载路径已经存在的文件或目录，Engine将复制这些文件和目录到数据卷中 设置false 启用复制
