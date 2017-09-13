@@ -12,6 +12,17 @@ services:
         volumes:
         - ./nginx:/etc/nginx/conf.d  #nginx配置文件目录
         - oryxtc-volume:/home/www
+    php:
+        build:
+            context: ./php
+        image: oryxtc/oryxtc-php
+        container_name: oryxtc-php
+        restart: always
+        links:
+        - mysql:mysql_server
+        - redis:redis_server
+        volumes:
+        - oryxtc-volume:/home/www
     php7:
         build:
             context: ./php7
