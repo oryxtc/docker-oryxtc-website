@@ -24,7 +24,7 @@ services:
         volumes:
         - oryxtc-volume:/home/www
     mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         container_name: oryxtc-mysql
         restart: always
         ports:
@@ -32,7 +32,9 @@ services:
         environment:
         - MYSQL_USER=oryxtc
         - MYSQL_PASSWORD=123456
-        - MYSQL_ROOT_PASSWORD=needtofile
+        - MYSQL_ROOT_PASSWORD_FILE=./mysql/mysql-root
+        volumes:
+            - mysql-data:/var/lib/mysql
     redis:
         build:
             context: ./redis
@@ -42,8 +44,8 @@ services:
         ports:
         - 6379:6379
 volumes:
-  - type: volume
-    source: oryxtc-volume
-    target: /home/www    #项目总目录
-    volume:
-      nocopy: false      #在容器的挂载路径已经存在的文件或目录，Engine将复制这些文件和目录到数据卷中 设置false 启用复制
+    mysql-data:
+    oryxtc-volume:
+        driver: local-persist
+        driver_opts:
+            mountpoint: /home/www
