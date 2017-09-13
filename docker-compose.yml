@@ -32,7 +32,7 @@ services:
         environment:
         - MYSQL_USER=oryxtc
         - MYSQL_PASSWORD=123456
-        - MYSQL_ROOT_PASSWORD_FILE=./mysql/mysql-root
+        - MYSQL_ROOT_PASSWORD=oryxtc
         volumes:
             - mysql-data:/var/lib/mysql
     redis:
