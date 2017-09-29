@@ -30,11 +30,10 @@ services:
         ports:
         - 3306:3306
         environment:
-        - MYSQL_USER=oryxtc
-        - MYSQL_PASSWORD=123456
-        - MYSQL_ROOT_PASSWORD=oryxtc
+        - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root
         volumes:
             - mysql-data:/var/lib/mysql
+            - ./secrets/mysql-root:/run/secrets/mysql-root
     redis:
         build:
             context: ./redis
