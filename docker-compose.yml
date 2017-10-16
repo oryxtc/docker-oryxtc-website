@@ -11,6 +11,7 @@ services:
         - php7:php7_server
         volumes:
         - ./nginx:/etc/nginx/conf.d  #nginx配置文件目录
+        - /etc/letsencrypt/live:/etc/letsencrypt/live  #certbot密钥文件夹
         - oryxtc-volume:/home/www
     php7:
         build:
