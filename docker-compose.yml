@@ -23,6 +23,7 @@ services:
         - mysql:mysql_server
         - redis:redis_server
         volumes:
+        - /etc/letsencrypt/live:/etc/letsencrypt/live  #certbot密钥文件夹
         - oryxtc-volume:/home/www
     mysql:
         image: mysql:8.0
