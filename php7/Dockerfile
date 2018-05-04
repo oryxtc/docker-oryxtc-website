@@ -3,7 +3,7 @@ COPY ./php.ini /usr/local/etc/php/
 RUN apt-get update && apt-get install -y \
 		libfreetype6-dev \
 		libjpeg62-turbo-dev \
-		libpng12-dev \
+		libpng-dev \
 		vsftpd \
 	&& pecl install redis-3.1.3 \
 	&& docker-php-ext-install -j$(nproc) bcmath pdo pdo_mysql fileinfo zip\
