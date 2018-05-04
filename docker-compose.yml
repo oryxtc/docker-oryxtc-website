@@ -2,50 +2,58 @@ version: '3'
 services:
     nginx:
         image: nginx:1.10.3
-        container_name: oryxtc-nginx
+        container_name: nginx
         restart: always
         ports:
-        - 80:80
-        - 443:443
-        links:
-        - php7:php7_server
+            - 80:80
+            - 443:443
+        networks:
+            - frontend
         volumes:
-        - ./nginx:/etc/nginx/conf.d  #nginx配置文件目录
-        - /etc/letsencrypt/:/etc/letsencrypt/  #certbot密钥文件夹
-        - oryxtc-volume:/home/www
+            - ./nginx:/etc/nginx/conf.d  #nginx配置文件目录
+            - /etc/letsencrypt/:/etc/letsencrypt/  #certbot密钥文件夹
+            - /home/www:/home
     php7:
         build:
             context: ./php7
-        image: oryxtc/oryxtc-php7
-        container_name: oryxtc-php7
+        image: oryxtc/php7
+        container_name: php7
         restart: always
-        links:
-        - mysql:mysql_server
-        - redis:redis_server
+        networks:
+            frontend:
+                aliases:
+                    - php7_server
+            backend:
+                aliases:
+                    - php7_server
         volumes:
-        - oryxtc-volume:/home/www
+           - ./php7/php.ini:/usr/local/etc/php/php.ini  #php配置文件目录
+           - /home/www:/home
     mysql:
         image: mysql:8.0
-        container_name: oryxtc-mysql
+        container_name: mysql
         restart: always
         ports:
-        - 3306:3306
+            - 3306:3306
         environment:
-        - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root
+            - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root
+        networks:
+            backend:
+                aliases:
+                    - mysql_server
         volumes:
             - mysql-data:/var/lib/mysql
             - ./secrets/mysql-root:/run/secrets/mysql-root
     redis:
         build:
             context: ./redis
-        image: oryxtc/oryxtc-redis
-        container_name: oryxtc-redis
+        image: oryxtc/redis
+        container_name: redis
         restart: always
         ports:
-        - 6379:6379
+            - 6379:6379
+networks:
+    frontend:
+    backend:
 volumes:
     mysql-data:
-    oryxtc-volume:
-        driver: local-persist
-        driver_opts:
-            mountpoint: /home/www
