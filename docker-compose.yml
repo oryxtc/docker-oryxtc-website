@@ -12,7 +12,7 @@ services:
         volumes:
             - ./nginx:/etc/nginx/conf.d  #nginx配置文件目录
             - /etc/letsencrypt/:/etc/letsencrypt/  #certbot密钥文件夹
-            - /home/www:/home
+            - /home/www:/home/www
     php7:
         build:
             context: ./php7
@@ -28,7 +28,7 @@ services:
                     - php7_server
         volumes:
            - ./php7/php.ini:/usr/local/etc/php/php.ini  #php配置文件目录
-           - /home/www:/home
+           - /home/www:/home/www
     mysql:
         image: mysql:8.0
         container_name: mysql
